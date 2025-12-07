@@ -6,6 +6,7 @@ export default function Contact() {
         { label: "Email (Backup)", value: "desaijayash@gmail.com", href: "mailto:desaijayash@gmail.com", icon: "/icons/email.svg", color: "#EA4335" },
         { label: "Phone", value: "+91 83173 78055", href: "tel:+918317378055", icon: "/icons/phone.svg", color: "#06b6d4" },
         { label: "LinkedIn", value: "jayesh-sardesai", href: "https://www.linkedin.com/in/jayesh-sardesai-5b3245279", icon: "/icons/linkedin.svg", color: "#0A66C2" },
+        { label: "GitHub", value: "JayeshSardesai", href: "https://github.com/JayeshSardesai", icon: "/icons/github.png", color: "#ffffff" },
         { label: "LeetCode", value: "jayesh037", href: "https://leetcode.com/u/jayesh037/", icon: "/icons/leetcode.png", color: "#FFA116" },
         { label: "GeeksforGeeks", value: "desaijr7yu", href: "https://www.geeksforgeeks.org/profile/desaijr7yu", icon: "/icons/gfg.svg", color: "#2F9E44" }
     ];

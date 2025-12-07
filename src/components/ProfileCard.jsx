@@ -1,12 +1,6 @@
 // src/components/ProfileCard.jsx
 import React, { useState, useEffect } from "react";
 
-/**
- * ProfileCard
- * - Clicking the header (or pressing Enter/Space) toggles expand/collapse.
- * - Buttons inside the header/content use stopPropagation so they don't toggle.
- * - Modal preview for certificates remains.
- */
 export default function ProfileCard({ title, short, details, image, achievements = [] }) {
     const [open, setOpen] = useState(false);
     const [modalSrc, setModalSrc] = useState(null);
@@ -21,8 +15,7 @@ export default function ProfileCard({ title, short, details, image, achievements
 
     const safeId = title.replace(/\s+/g, "-").toLowerCase();
 
-    const toggle = (e) => {
-        // default toggle behavior
+    const toggle = () => {
         setOpen(v => !v);
     };
 
@@ -35,10 +28,7 @@ export default function ProfileCard({ title, short, details, image, achievements
 
     return (
         <>
-            <div
-                className="card self-start w-full"
-                style={{ cursor: "auto" }}
-            >
+            <div className="card w-full flex flex-col min-w-0">
                 {/* Header area: clickable to toggle */}
                 <div
                     role="button"
@@ -47,45 +37,29 @@ export default function ProfileCard({ title, short, details, image, achievements
                     onKeyDown={onHeaderKey}
                     aria-expanded={open}
                     aria-controls={`profile-${safeId}`}
-                    className="flex items-start gap-4 p-4 md:p-4"
-                    style={{ cursor: "pointer" }}
+                    className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 flex-shrink-0 cursor-pointer"
                 >
-                    {image ? (
+                    {image && (
                         <img
                             src={image}
                             alt={title}
-                            className="w-14 h-14 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0"
-                            onClick={(e) => e.stopPropagation()} // prevent image clicks toggling if user clicks on image controls later
+                            className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0"
+                            onClick={(e) => e.stopPropagation()}
                         />
-                    ) : null}
+                    )}
 
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                                <h4 className="font-semibold text-base md:text-lg truncate">{title}</h4>
-                                <p className="text-muted text-sm mt-1 truncate">{short}</p>
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="min-w-0 flex-1">
+                                <h4 className="font-semibold text-sm sm:text-base md:text-lg truncate">{title}</h4>
+                                <p className="text-muted text-xs sm:text-sm mt-1 line-clamp-2 sm:truncate">{short}</p>
                             </div>
 
-                            {/* Right side small actions — stopPropagation so they don't toggle */}
-                            <div className="flex items-center gap-2">
-                                {achievements.length > 0 && (
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); setModalSrc(achievements[0].src); }}
-                                        title="Preview first certificate"
-                                        className="p-1 rounded-md bg-surface/70 hover:bg-surface/80 hidden sm:inline-flex"
-                                        aria-label="Preview first certificate"
-                                    >
-                                        {/* eye icon */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </button>
-                                )}
-
+                            {/* Right side actions */}
+                            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); toggle(); }}
-                                    className="text-sm px-3 py-1 rounded-md bg-surface/70"
+                                    className="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-md bg-surface/70 whitespace-nowrap hover:bg-surface/80 transition-colors"
                                     aria-label={open ? "Collapse card" : "Expand card"}
                                 >
                                     {open ? "Less" : "More"}
@@ -95,33 +69,33 @@ export default function ProfileCard({ title, short, details, image, achievements
                     </div>
                 </div>
 
-                {/* Content area: expands/collapses */}
+                {/* Content area */}
                 <div
                     id={`profile-${safeId}`}
-                    className={`px-4 pb-4 overflow-hidden transition-all ${open ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}`}
+                    className={`px-3 sm:px-4 pb-3 sm:pb-4 overflow-hidden transition-all duration-300 ${open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                        }`}
                 >
-                    <div className="text-gray-200 text-sm leading-relaxed">
-                        {/* Make sure content clicks do not close card */}
+                    <div className="text-gray-200 text-xs sm:text-sm leading-relaxed">
                         <div onClick={(e) => e.stopPropagation()}>
                             {details}
 
                             {/* Achievements list */}
                             {achievements.length > 0 && (
-                                <div className="mt-4 space-y-3">
+                                <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
                                     {achievements.map((a, i) => (
-                                        <div key={i} className="flex items-center justify-between gap-3 p-3 rounded-md bg-surface/70">
+                                        <div key={i} className="flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-md bg-surface/70">
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-sm font-medium truncate">{a.label}</div>
-                                                {a.note && <div className="text-muted text-xs mt-0.5 truncate">{a.note}</div>}
+                                                <div className="text-xs sm:text-sm font-medium break-words">{a.label}</div>
+                                                {a.note && <div className="text-muted text-xs mt-0.5 break-words">{a.note}</div>}
                                             </div>
 
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setModalSrc(a.src); }}
                                                     title={`View ${a.label}`}
-                                                    className="p-2 rounded-md bg-surface/60 hover:bg-surface/80"
+                                                    className="p-1 sm:p-2 rounded-md bg-surface/60 hover:bg-surface/80 transition-colors"
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                     </svg>
@@ -132,9 +106,9 @@ export default function ProfileCard({ title, short, details, image, achievements
                                                     href={a.src}
                                                     download
                                                     title={`Download ${a.label}`}
-                                                    className="p-2 rounded-md bg-surface/60 hover:bg-surface/80"
+                                                    className="p-1 sm:p-2 rounded-md bg-surface/60 hover:bg-surface/80 transition-colors"
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v12" />
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 11l4 4 4-4" />
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21H3" />
@@ -148,29 +122,39 @@ export default function ProfileCard({ title, short, details, image, achievements
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Modal for certificate preview */}
-            {modalSrc && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                    onClick={() => setModalSrc(null)}
-                    role="dialog"
-                    aria-modal="true"
-                >
-                    <div className="absolute inset-0 bg-black/70" />
+            {
+                modalSrc && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                        onClick={() => setModalSrc(null)}
+                        role="dialog"
+                        aria-modal="true"
+                    >
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 
-                    <div className="relative max-w-[95%] max-h-[90%] bg-transparent" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => setModalSrc(null)} className="absolute top-2 right-2 z-50 p-2 rounded-md bg-surface/80" aria-label="Close">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                        <div className="relative w-full max-w-4xl max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+                            <button
+                                onClick={() => setModalSrc(null)}
+                                className="absolute -top-10 right-0 sm:top-2 sm:right-2 z-50 p-2 rounded-md bg-surface/90 hover:bg-surface transition-colors"
+                                aria-label="Close"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
 
-                        <img src={modalSrc} alt="Certificate" className="max-w-full max-h-[80vh] rounded-lg shadow-xl object-contain" />
+                            <img
+                                src={modalSrc}
+                                alt="Certificate"
+                                className="w-full h-auto max-h-[85vh] rounded-lg shadow-2xl object-contain"
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </>
     );
 }
